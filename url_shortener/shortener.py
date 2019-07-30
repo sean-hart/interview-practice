@@ -30,8 +30,14 @@ def get_url(short_url):
     """
     Fetch the URL from the storage system
     """
-    url_object = [x for x in urls if x.short_url == short_url].pop()
-    return url_object
+    print(urls)
+    url_object_list = [x for x in urls if x.short_url == short_url]
+    if len(url_object_list) > 1:
+        return "More than One"
+    elif len(url_object_list) == 0:
+        return ""
+    else:
+        return url_object_list[0].url
     
 def set_url(long_url):
     # Let's grab the first 4 characters of an mmd5 hash as an identifier
@@ -43,4 +49,9 @@ def set_url(long_url):
 
 def garbage_collection():
     pass
+
+def clear_database():
+    print("Dropping DB")
+    urls.clear()
+    print(f'AfterDrop: {urls}')
     

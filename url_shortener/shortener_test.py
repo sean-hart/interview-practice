@@ -1,6 +1,7 @@
 import unittest
 
 from shortener import(
+    clear_database,
     get_url,
     set_url,
     working,
@@ -8,6 +9,9 @@ from shortener import(
 ) 
 
 class ShortenerTest(unittest.TestCase):
+
+    def tearDown(self):
+        clear_database()
 
     def test_working(self):
         self.assertEqual(working(), True)
@@ -19,11 +23,23 @@ class ShortenerTest(unittest.TestCase):
 
     def test_set_url(self):
         url = set_url('https://google.com')
+
         self.assertEqual(url.short_url, 'https://go.to/9999' )
+
 
     def test_get_url(self):
         set_url('https://google.com')
         fetched_url = get_url('https://go.to/9999')
-        self.assertEqual(fetched_url.url, 'https://google.com')
-        
+        self.assertEqual(fetched_url, 'https://google.com')
+
+
+
+    def test_duplicates(self):
+        set_url('https://google.com')
+        set_url('https://google.com')
+        fetched_url = get_url('https://go.to/9999')
+
+        self.assertEqual(fetched_url, 'https://google.com')
+
+
         
