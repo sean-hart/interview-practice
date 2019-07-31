@@ -75,7 +75,6 @@ def get_url(short_url):
 def set_url(long_url):
     url_object = Url(long_url)
     url_object.generate_short_url()
-    # url_object.save()
     return url_object.short_url
 
 
