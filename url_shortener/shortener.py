@@ -48,9 +48,12 @@ def set_url(long_url):
     # Let's grab the first 4 characters of an mmd5 hash as an identifier
     identifier = hashlib.md5(long_url.encode("utf-8")).hexdigest()[:4]
     short_url = f'{base_domain}{identifier}'
-    url_object = Url(long_url, short_url)
-    urls.append(url_object)
-    return url_object
+    if get_url(short_url) == long_url:
+        return short_url
+    else:
+        url_object = Url(long_url, short_url)
+        urls.append(url_object)
+        return short_url
 
 
 def garbage_collection():
