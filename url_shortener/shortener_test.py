@@ -36,5 +36,12 @@ class ShortenerTest(unittest.TestCase):
         set_url('https://google.com')
         set_url('https://google.com')
         fetched_url = get_url('https://go.to/9999')
-
         self.assertEqual(fetched_url, 'https://google.com')
+
+    def test_collisions(self):
+        set_url('https://google.com')
+        url = Url('https://google.com/fakedcollision')
+        url.generate_short_url('9999999999999999999999')
+        url.save()
+        fetched_url = get_url('https://go.to/99999')
+        self.assertEqual(fetched_url, 'https://google.com/fakedcollision')
