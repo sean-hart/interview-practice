@@ -37,19 +37,25 @@ class Url(object):
         if md5 is None:
             md5 = hashlib.md5(self.url.encode("utf-8")).hexdigest()
         identifier = md5[:4]
-        self.short_url = f'{base_domain}{identifier}'
-
-        i = 4
-        while not self.is_unique():
-            identifier = md5[:i]
-            self.short_url = f'{base_domain}{identifier}'
-            i += 1
-
-    def is_unique(self):
-        if get_url(self.short_url):
-            return False
+        short_url = f'{base_domain}{identifier}'
+        fetched_url = get_url(short_url)
+        if fetched_url and fetched_url == self.url:
+            return short_url
         else:
+            i = 4
+            while self.is_not_unique(short_url):
+                identifier = md5[:i]
+                short_url = f'{base_domain}{identifier}'
+                i += 1
+            self.short_url = short_url
+            self.save()
+            return short_url
+
+    def is_not_unique(self, short_url):
+        if get_url(short_url):
             return True
+        else:
+            return False
 
 
 def get_url(short_url):
@@ -69,7 +75,7 @@ def get_url(short_url):
 def set_url(long_url):
     url_object = Url(long_url)
     url_object.generate_short_url()
-    url_object.save()
+    # url_object.save()
     return url_object.short_url
 
 
